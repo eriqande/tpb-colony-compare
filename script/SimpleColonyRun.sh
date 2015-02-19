@@ -7,14 +7,16 @@ UseTheLocsFile=1;
 WeightedAlleFreqs=0;
 DryRun=0;
 RUN_LENGTH=1;
+SEED=1234;
 LIKE_PRECIS=1;
 NUMRUNS=1;
+EWENS_PRIOR=0;
 INFERENCE_METHOD=1;
-BINARY_BASENAME=colony2s.out;  # be default it uses the new colony
+BINARY_BASENAME=colony2s.out;  # by default it uses the new colony
 
 function usage {
     echo Syntax:
-    echo "  $(basename $0)  [-y -d DropRate -m MisRate -l NumLoc -L -f -r RunLen -p LikPre -n NumRuns -x] DIR  RUN  Inputs  Perm?"
+    echo "  $(basename $0)  [-y -d DropRate -m MisRate -l NumLoc -e EwensPrior -L -f -r RunLen -p LikPre -n NumRuns -x] DIR  RUN  Inputs  Perm?"
     echo
     echo "DIR is the name of a directory where there resides a file named 
 genotypes.txt.  This script creates a new directory named RUN inside
@@ -50,6 +52,10 @@ The optional flag options have the following effects:
                    in genotypes.txt.  Typically you will want to 
                    also use -L with this so it doesn't try getting
                    locus names from a file that might not be there.
+-e EwensPrior  :   By default, don't use any prior.  But it you want to use it you can add a string 
+                   that looks like "1 3.07 3.07" (make sure it is quoted) where the 1 means "use the ewens prior"
+                   and the two numbers that follow are the average number of offspring per each sex.
+-S seed        :   The random seed for Colony to use.  By default = 1234
 -L             :   Don't try to get locus names from the_locs.txt.  Instead
                    just use: Loc_1, Loc_2, ... NumLoc.
 -f             :   Sets COLONY to do allele frequency estimation that
@@ -73,7 +79,7 @@ if [ $# -eq 0 ]; then
 fi;
 
 # use getopts so you can pass it -n 50, for example. 
-while getopts ":d:m:l:Lyfr:p:n:xo" opt; do
+while getopts ":d:m:l:e:S:Lyfr:p:n:xo" opt; do
     case $opt in
 	d    )  DROPOUTRATE=$OPTARG;
 	    ;;
@@ -81,6 +87,10 @@ while getopts ":d:m:l:Lyfr:p:n:xo" opt; do
 	    ;;
 	l    )  NumLocToUse=$OPTARG;
 	    ;;
+  e    )  EWENS_PRIOR="$OPTARG";
+      ;;
+  S    )  SEED=$OPTARG;
+      ;;
 	L    )  UseTheLocsFile=0;
 	    ;;
   y    )  DryRun=1;
@@ -170,12 +180,13 @@ echo $NumLocToUse $DROPOUTRATE $MISCALLRATE | awk '
          s/OUTFIX/$(basename $DIR)_$RUN/g;
          s/NUMOFFS/$NUMFISH/g;
          s/NUMLOCS/$NumLocToUse/g;
-         s/SEED/$(Rscript -e 'floor(runif(1) * 100000); Sys.sleep(.05)')/g;  # just want to get a reliably different random seed.  This is sort of hacky, but it works.
+         s/SEED/$SEED/g;  # just want to get a reliably different random seed.  This is sort of hacky, but it works.
          s/UPDATE_FREQS/$WeightedAlleFreqs/g;
          s/NUMRUNS/$NUMRUNS/g;
          s/RUNLENGTH/$RUN_LENGTH/g;
          s/LIKE_PRECIS/$LIKE_PRECIS/g;
-         s/INFERENCE_METHOD/$INFERENCE_METHOD/g; " $PREAMBLE;
+         s/INFERENCE_METHOD/$INFERENCE_METHOD/g;
+         s/EWENS_PRIOR/$EWENS_PRIOR/g;" $PREAMBLE;
     cat aaatemploc;
     if [ $PERM -eq 1 ]; then
 	sgm_perm -N  $NUMFISH -L $NUMLOCI < ../genotypes.txt | awk -v N=$NumLocToUse '$1~/Perm_[0-9]/ {printf("%s",$1); for(i=2;i<=N*2+1;i++) printf("\t%s",$i); printf("\n");}'

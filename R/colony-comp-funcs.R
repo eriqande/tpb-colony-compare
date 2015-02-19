@@ -9,7 +9,9 @@
 createColonyRunArea <- function(data_file = "./data/chinook_full_sibs.Rda", 
                                 dir_name = "colony-runs", 
                                 locus_numbers = 1:95, 
-                                opt_strings = c("full-colony" = " -y -d 0.0 -m 0.005 -L -f ", "pairwise-colony" = "-y -d 0.0 -m 0.005 -L -f  -x ")
+                                opt_strings = c("full-colony" = paste(" -y -d 0.0 -m 0.005 -L -f -S", floor(runif(1, min = 1, max = 100000))),
+                                                "pairwise-colony" = paste(" -y -d 0.0 -m 0.005 -L -f  -x  -S", floor(runif(1, min = 1, max = 100000)))
+                                )
 ) {
   # load the data:
   load(data_file)

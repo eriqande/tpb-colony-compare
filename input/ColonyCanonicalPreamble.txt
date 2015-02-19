@@ -8,7 +8,7 @@ UPDATE_FREQS         ! 0/1=Not updating/updating allele frequency
 0         ! 0/1=No inbreeding/inbreeding (This option not compatible with the old version of colony)  <-- don't alter this line---the script uses it to remove this line when necessary
 0         ! 0/1=Diploid species/HaploDiploid species
 1  1      ! 0/1=Polygamy/Monogamy for males & females
-0         ! 0/1=with/without sibship size prior
+EWENS_PRIOR         ! 0/1=with/without sibship size prior
 0         ! 0/1=Unknown/Known population allele frequency
 NUMRUNS         ! Number of runs
 RUNLENGTH         ! Length of run (1/2/3)
