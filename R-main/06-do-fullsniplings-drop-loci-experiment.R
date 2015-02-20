@@ -21,7 +21,7 @@ load("data/chinook_full_sibs.Rda")
 loc_vals <- seq(95, 25, by=-10)
 
 # run fullsniplings on all those
-set.seed(15)
+set.seed(27)
 
 fullsnip_loc_drop_results <- mclapply(loc_vals, function(x) {
   v <- 1:x
