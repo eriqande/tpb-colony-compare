@@ -1,9 +1,11 @@
 
-REDO_PDS = TRUE
+REDO_PDS = TRUE  # set to false if you have already computed the partition distances
 
 load("outputs/InferredSibgroups.Rda")
 load("outputs/TrueSibgroups.Rda")
-load("outputs/PartitionDistances.Rda")
+if(!REDO_PDS) {
+  load("outputs/PartitionDistances.Rda")
+}
 source("R/colony-comp-funcs.R")
 
 
