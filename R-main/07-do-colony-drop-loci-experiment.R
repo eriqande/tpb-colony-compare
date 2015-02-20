@@ -20,7 +20,7 @@ lapply(loc_vals, function(x)
   createColonyRunArea(data_file = "./data/chinook_full_sibs.Rda", 
                       dir_name = file.path(top_dir, x), 
                       locus_numbers = 1:x, 
-                      opt_strings = c("full-colony" = paste(" -y -d 0.0 -m 0.005 -L -f  -x  -S", 
+                      opt_strings = c("full-colony" = paste(" -y -d 0.0 -m 0.005 -L -f  -S", 
                                                             floor(runif(1, min = 1, max = 100000)),
                                                             " -e \"1 ", sprintf("%.6f", ColonyFirstRunMeanSibsize), 
                                                             sprintf("%.6f", ColonyFirstRunMeanSibsize), " \""
