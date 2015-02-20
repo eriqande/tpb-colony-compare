@@ -1,8 +1,12 @@
 
 # must be run in project dirctory
 
-
+load("outputs/InferredSibgroups.Rda")
 source("R/colony-comp-funcs.R")
+
+
+# get the mean size of the Colony inferred sibgroups (about 3.07) for use later
+ColonyFirstRunMeanSibsize <- mean(sapply(InferredSibgroups$Full.colony$sets, length))
 
 
 loc_vals <- seq(95, 25, by=-10)  # these are the locus values to do

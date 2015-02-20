@@ -10,8 +10,7 @@ source("R/colony-comp-funcs.R")
 
 
 
-# et the mean size of the Colony inferred sibgroups (about 3.07) for use later
-ColonyFirstRunMeanSibsize <- mean(sapply(InferredSibgroups$Full.colony$sets, length))
+
 
 if(REDO_PDS) {
   message("compiling up glpk components to use as a dyn.load")
