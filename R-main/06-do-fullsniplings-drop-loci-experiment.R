@@ -7,7 +7,7 @@ library(parallel)
 
 
 # install fullsniplings
-devtools::install_github(repo = "fullsniplings", username = "eriqande")
+devtools::install_github(repo = "eriqande/fullsniplings")
 library(fullsniplings)
 
 source("R/colony-comp-funcs.R")
@@ -31,10 +31,15 @@ fullsnip_loc_drop_results <- mclapply(loc_vals, function(x) {
        fullsniplings_chinook_results = fullsniplings_chinook_results)},
     mc.cores = 8
 )
+
+message("Done with the fullsnipling runs.  Now slurping.")
 names(fullsnip_loc_drop_results) <- loc_vals
 
 
 fullsnip_loc_drop_summaries <- lapply(fullsnip_loc_drop_results, function(x) slurpFullSniplingsResults(x$fullsniplings_chinook_results, NumSweeps))
 
+message("Done slurping.  Now saving results...Compression may take a awhile.")
+
 save(fullsnip_loc_drop_summaries, file = "outputs/fullsnip_loc_drop_summaries.Rda", compress = "xz")
 
+message("Saved results into outputs/fullsnip_loc_drop_summaries.Rda")
