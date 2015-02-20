@@ -11,11 +11,17 @@ loc_vals <- seq(95, 25, by=-10)  # these are the locus values to do
 # create the data sets to run and put each in their own directory
 top_dir <- "colony-drop-loc-runs"
 
+set.seed(22)  # this will set colony's seeds to a reproducible value
 lapply(loc_vals, function(x) 
   createColonyRunArea(data_file = "./data/chinook_full_sibs.Rda", 
                       dir_name = file.path(top_dir, x), 
                       locus_numbers = 1:x, 
-                      opt_strings = c("full-colony" = " -y -d 0.0 -m 0.005 -L -f ")
+                      opt_strings = c("full-colony" = paste(" -y -d 0.0 -m 0.005 -L -f  -x  -S", 
+                                                            floor(runif(1, min = 1, max = 100000)),
+                                                            " -e \"1 ", sprintf("%.6f", ColonyFirstRunMeanSibsize), 
+                                                            sprintf("%.6f", ColonyFirstRunMeanSibsize), " \""
+                                                            )
+                                      )
   )
 )
 

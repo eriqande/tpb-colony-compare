@@ -58,7 +58,7 @@ fs_drop_loc_df_list <- lapply(
 
 # fullsniplings bugle plots
 lapply(names(fs_drop_loc_df_list), function(y) { 
-  pdf(file = paste("drop-loc-bugle-plot-fullsnip-", y, ".pdf", sep=""), width = 9.7, height = 6)
+  pdf(file = paste("plots/drop-loc-bugle-plot-fullsnip-", y, ".pdf", sep=""), width = 9.7, height = 6)
   x <- fs_drop_loc_df_list[[y]]
   inferred_sibs_bugle_plot(x, lscale = .04, main = paste("Fullsniplings    ---     Number of Loci:", y))
   dev.off()
@@ -66,21 +66,9 @@ lapply(names(fs_drop_loc_df_list), function(y) {
 
 # colony bugle plots
 lapply(names(colony_drop_loc_df_list), function(y) { 
-  pdf(file = paste("drop-loc-bugle-plot-colony-", y, ".pdf", sep=""), width = 9.7, height = 6)
+  pdf(file = paste("plots/drop-loc-bugle-plot-colony-", y, ".pdf", sep=""), width = 9.7, height = 6)
   x <- colony_drop_loc_df_list[[y]]
   inferred_sibs_bugle_plot(x, lscale = .04, main = paste("Colony   ---     Number of Loci:", y))
   dev.off()
 })
 
-# copy files and then make the latex calls for them
-dl_files <- dir(pattern = "^drop-loc*")
-file.copy(dl_files, "../images/", overwrite = TRUE)
-cat(sapply(rev(dl_files[grep(pattern = "colony", dl_files)]), function(i) {
-  paste("\\begin{frame}{{\\sc colony} with decreasing number of loci} \\includegraphics[width=\\textwidth]{../images/", i,"} \\end{frame}", sep="")
-}), sep="\n\n")
-
-
-
-cat(sapply(rev(dl_files[grep(pattern = "fullsnip", dl_files)]), function(i) {
-  paste("\\begin{frame}{{\\sc fullsniplings} with decreasing number of loci} \\includegraphics[width=\\textwidth]{../images/", i,"} \\end{frame}", sep="")
-}), sep="\n\n")

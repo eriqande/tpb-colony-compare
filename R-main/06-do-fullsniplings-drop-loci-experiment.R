@@ -22,6 +22,7 @@ loc_vals <- seq(95, 25, by=-10)
 
 # run fullsniplings on all those
 set.seed(15)
+
 fullsnip_loc_drop_results <- mclapply(loc_vals, function(x) {
   v <- 1:x
   loc_cols <- as.vector(rbind(v*2-1, v*2))

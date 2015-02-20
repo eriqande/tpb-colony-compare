@@ -19,12 +19,12 @@ paste(names(cnts), collapse = "  &  ")
 paste(cnts, collapse = "  &  ")
 
 
-# look at the true average sibgroup size.  IT is about 2.68
+# look at the true average sibgroup size.  It is about 2.68
 true.average.sibgroup.size <- mean(count(chinook_full_sibs_pedigree[,c("Pa", "Ma")])$freq)
 
 
 # run fullsniplings.  
-set.seed(5)
+set.seed(5)  # this ensures reproducibility
 fullsnip_time <-  system.time(fullsniplings_chinook_results <- run_mcmc(chinook_full_sibs_genos, burn_in = 100, num_sweeps = 500))
 
 

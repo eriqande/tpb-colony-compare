@@ -4,7 +4,14 @@ This repository houses the code used to make a comparison between colony
 and fullsniplings for a paper I am submitting to TPB.  
 
 The code to execute to reproduce my results is in R-main in scripts that should
-be run in series as numbered. 
+be run in series as numbered.   In fact, if you want to just run them all in series
+then just do
+
+```r
+source("R-main/master-script.R")
+```
+in R, making sure that the working directory in R is set to the top-level directory
+of the repository (i.e. the directory that contains `tpb-colony-compare.Rproj`)
 
 The basic outline of what happens:
 

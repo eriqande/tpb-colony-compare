@@ -16,7 +16,7 @@ load("./data/chinook_full_sibs.Rda")  # get the data set too.
 dir.create("outputs", showWarnings = FALSE)
 
 
-# copy the BestFSFamily files over to a place we will actually keep under version control
+# copy the BestFSFamily files over to a place that is easier to find
 # so we have these intermediates
 file.copy(from = "colony-runs/full-colony/colony-runs_full-colony.BestFSFamily", to = "outputs/colony-runs_full-colony.BestFSFamily")
 file.copy(from = "colony-runs/pairwise-colony/colony-runs_pairwise-colony.BestFSFamily", to = "outputs/colony-runs_pairwise-colony.BestFSFamily")
@@ -61,9 +61,7 @@ save(TrueSibgroups, file = "outputs/TrueSibgroups.Rda", compress = "xz")
 
 # get the colony-inferred ones
 Col.List <- lapply(c(Full.colony = "outputs/colony-runs_full-colony.BestFSFamily", 
-                     Pairwise.colony = "outputs/colony-runs_pairwise-colony.BestFSFamily",
-                     SibPri3.07.colony = "outputs/colony-sib-prior-runs_colony-sib-pri-3_07.BestFSFamily",
-                     SibPri_dl_25_sib_pri3.07.colony25 = "outputs/colony-drop-loc-25-sib-pri-3_07.BestFSFamily"),
+                     Pairwise.colony = "outputs/colony-runs_pairwise-colony.BestFSFamily"),
        function(x) slurpColonyResults(file = x, indices = chinook_indices))
 
 
@@ -77,7 +75,8 @@ FS.List <- lapply(list(FullSnip = fullsniplings_chinook_results, FullSnip_pp100 
 InferredSibgroups <- c(Col.List, FS.List)
 
 
-# now, we need to make another summary of it that we can use in the "sib_result_plot" function.
+# later we need to make another summary of it that we can use in the "sib_result_plot" function.
+# so save it here to do that later.
 
 
 save(InferredSibgroups, file = "outputs/InferredSibgroups.Rda", compress = "xz")
