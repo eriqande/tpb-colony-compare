@@ -29,7 +29,7 @@ fullsnip_loc_drop_results <- mclapply(loc_vals, function(x) {
   fullsnip_time <-  system.time(fullsniplings_chinook_results <- run_mcmc(chinook_full_sibs_genos[, loc_cols], burn_in = NumBurnIn, num_sweeps = NumSweeps))
   list(fullsnip_time = fullsnip_time,
        fullsniplings_chinook_results = fullsniplings_chinook_results)},
-    mc.cores = 8
+    mc.cores = 12
 )
 
 message("Done with the fullsnipling runs.  Now slurping.")
