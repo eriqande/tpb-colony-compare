@@ -5,7 +5,7 @@
 
 
 # install fullsniplings
-devtools::install_github(repo = "fullsniplings", username = "eriqande")
+devtools::install_github(repo = "eriqande/fullsniplings")
 library(fullsniplings)
 
 

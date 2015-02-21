@@ -115,3 +115,18 @@ lapply(names(colony_drop_loc_df_list_ewens), function(y) {
   inferred_sibs_bugle_plot(x, lscale = .04, main = paste("Colony - Ewens   ---     Number of Loci:", y))
   dev.off()
 })
+
+
+# At the end we can store all the summaries for later use
+# in preparing the final figures
+DropLocSummaries <- list(fullsnip_list = fullsnip_loc_drop_summaries,
+                         fullsnip_df_list = fs_drop_loc_df_list,
+                         colony_ewens_list = Col.List.Drop.Loc.Ewens,
+                         colony_ewens_df_list = colony_drop_loc_df_list_ewens,
+                         colony_list = Col.List.Drop.Loc,
+                         colony_df_list = colony_drop_loc_df_list,
+                         partition_distances = list(fullsnip = fullsnip_drop_loc_pds,
+                                                    colony_ewens = colony_drop_loc_pds_ewens,
+                                                    colony = colony_drop_loc_pds,
+                                                    )
+                         )
