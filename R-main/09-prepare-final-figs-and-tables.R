@@ -64,7 +64,7 @@ bugle_theme <- function (base_size = 12, base_family = "")
   theme_grey(base_size = base_size, base_family = base_family) %+replace% 
     theme(axis.text = element_text(size = rel(0.8)), 
           axis.ticks = element_line(colour = "black"), 
-          legend.key = element_rect(colour = NA), 
+          legend.key = element_rect(colour = "grey50"), 
           legend.position = "bottom",
           panel.background = element_rect(fill = "white",
                                           colour = NA), 
@@ -98,7 +98,7 @@ df1 <- df[df$NumSNPs ==  95, ]
 ggbugle(df1) +
   facet_wrap(~ Program, ncol = 3)
 
-ggsave(file = "final_figures/bugle_trio.pdf", width = 8.5, height = 4)
+ggsave(file = "final_figures/bugle_trio.pdf", width = 8.5, height = 3.3)
 
 #### Now do the 7 x 3 grid  ####
 df2 <- df[df$NumSNPs <=  85, ]
@@ -106,7 +106,7 @@ df2$NumSNPs <- factor(df2$NumSNPs, levels = seq(85, 25, -10))  # to order them t
 ggbugle(df2) + 
   facet_grid(NumSNPs ~ Program, scales = "free_x")
 
-ggsave(file = "final_figures/bugle_matrix.pdf", width = 8.5, height = 11)
+ggsave(file = "final_figures/bugle_matrix.pdf", width = 8.5, height = 10)
 
 #### And then make the table of partition distances ####
 write.table(D$partition_distances)
