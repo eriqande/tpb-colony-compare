@@ -1,6 +1,6 @@
 
 
-
+#### Load libraries and data, source code  ####
 source("R/colony-comp-funcs.R")
 pd_path <- "partition-distance-calculation"
 source(file.path(pd_path, "R/SibAssessRfunctions.R"));

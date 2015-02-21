@@ -207,3 +207,53 @@ inferred_sibs_bugle_plot <- function(ISG, lscale = .01, add = FALSE, ...) {
          col = c("gray", "blue", "red"), lty = "solid"
   )
 }
+
+
+
+
+
+
+#' plot posterior bars and compare to correct or incorrect
+#' 
+#' Makes a nice plot. 
+#' @param ISG  an inferred sibling group data frame as gets made by sib_list_to_data_frame
+#' @param SS vector of sibsizes
+#' @param post  vector of posteriors associated with each sibship (between 0 and 1)
+#' @param false_positive A logical vector indicating whether the sibship included
+#' any non-sibs
+#' @param lscale how big should the lengths be on the y-scale. i.e. one sibling = lscale
+#' @param correct  logical vector saying whether each inferred sibship is correct or not
+#' @param add TRUE means add to existing plot
+#' @export
+final_bugle_plot <- function(ISG, lscale = .01, add = FALSE, 
+                             XLAB = "Index of Inferred Sibling Group", 
+                             YLAB = "Estimated Posterior Probability",
+                             ...) {
+  
+  L <- nrow(ISG)
+  
+  SS <- ISG$NumSibs
+  post <- ISG$Posterior
+  false_positive <- ISG$AveNumNonSibs > 0 
+  correct <- ISG$Correct
+  
+  # tops and bottoms of our segments
+  bots <- post - lscale * SS / 2
+  tops <- post + lscale * SS / 2
+  
+  # set up plot area
+  if(add == FALSE) plot(c(1,L), c(0,1.2), type="n", 
+                        ylab = YLAB, 
+                        xlab = XLAB,
+                        ...)
+  
+  # plot the segments 
+  segments(x0 = 1:L, y0 = bots, x1 = 1:L, y1 = tops, col=c("lightgray", "blue", "darkorange")[(!correct) + 1 + false_positive])
+  lines(1:L, post)
+  
+  # put the legend in the lower right
+  #legend("bottomleft", 
+  #       legend = c("Correctly-inferred sibling group", "Incomplete sibling group", "Grouping of non-siblings"), 
+  #       col = c("lightgray", "blue", "red"), lty = "solid"
+  #)
+}
