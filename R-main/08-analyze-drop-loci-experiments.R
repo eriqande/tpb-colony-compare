@@ -125,8 +125,11 @@ DropLocSummaries <- list(fullsnip_list = fullsnip_loc_drop_summaries,
                          colony_ewens_df_list = colony_drop_loc_df_list_ewens,
                          colony_list = Col.List.Drop.Loc,
                          colony_df_list = colony_drop_loc_df_list,
-                         partition_distances = list(fullsnip = fullsnip_drop_loc_pds,
+                         partition_distances = cbind(fullsnip = fullsnip_drop_loc_pds,
                                                     colony_ewens = colony_drop_loc_pds_ewens,
-                                                    colony = colony_drop_loc_pds,
+                                                    colony = colony_drop_loc_pds
                                                     )
                          )
+
+
+save(DropLocSummaries, file = "outputs/DropLocSummaries.rda", compress = "xz")
