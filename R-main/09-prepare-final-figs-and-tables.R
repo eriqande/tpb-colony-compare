@@ -9,28 +9,6 @@ D <- DropLocSummaries
 # make an output directory
 dir.create("final_figures", showWarnings = FALSE)
 
-if(FALSE) { # don't include the base graphics versions.  Will eventually prune them completely 
-  #### Make the first colony-compare figure (3-panels of bugle plots)  ####
-  par(mfrow=c(1,3))
-  final_bugle_plot(D$fullsnip_df_list$"95", lscale = .04)
-  final_bugle_plot(D$colony_ewens_df_list$"95", lscale = .04)
-  final_bugle_plot(D$colony_df_list$"95", lscale = .04)
-  
-  
-  
-  #### Now make the drop-loc figures on a 7 x 3 grid.
-  
-  par(mfrow = c(4,3))
-  lapply(as.character(seq(85, 55, -10)), function(x) {
-    lapply(c("fullsnip_df_list", "colony_ewens_df_list", "colony_df_list"), function(y){
-      final_bugle_plot(D[[y]][[x]], lscale = .04, 
-                       XLAB = "",
-                       YLAB = "")
-    })
-  })
-}
-
-
 
 #### Put the results into a long-format data frame for ggplot  ####
 proglist <- c("fullsnip_df_list", "colony_ewens_df_list", "colony_df_list")
