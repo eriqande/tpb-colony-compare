@@ -1,6 +1,7 @@
 
 #### load libraries and data and code
 library(ggplot2)
+library(plyr)
 source("R/colony-comp-funcs.R")
 load("outputs/DropLocSummaries.rda")
 D <- DropLocSummaries
@@ -8,26 +9,26 @@ D <- DropLocSummaries
 # make an output directory
 dir.create("final_figures", showWarnings = FALSE)
 
-
-#### Make the first colony-compare figure (3-panels of bugle plots)  ####
-par(mfrow=c(1,3))
-final_bugle_plot(D$fullsnip_df_list$"95", lscale = .04)
-final_bugle_plot(D$colony_ewens_df_list$"95", lscale = .04)
-final_bugle_plot(D$colony_df_list$"95", lscale = .04)
-
-
-
-#### Now make the drop-loc figures on a 7 x 3 grid.
-
-par(mfrow = c(4,3))
-lapply(as.character(seq(85, 55, -10)), function(x) {
-  lapply(c("fullsnip_df_list", "colony_ewens_df_list", "colony_df_list"), function(y){
-    final_bugle_plot(D[[y]][[x]], lscale = .04, 
-                     XLAB = "",
-                     YLAB = "")
+if(FALSE) { # don't include the base graphics versions.  Will eventually prune them completely 
+  #### Make the first colony-compare figure (3-panels of bugle plots)  ####
+  par(mfrow=c(1,3))
+  final_bugle_plot(D$fullsnip_df_list$"95", lscale = .04)
+  final_bugle_plot(D$colony_ewens_df_list$"95", lscale = .04)
+  final_bugle_plot(D$colony_df_list$"95", lscale = .04)
+  
+  
+  
+  #### Now make the drop-loc figures on a 7 x 3 grid.
+  
+  par(mfrow = c(4,3))
+  lapply(as.character(seq(85, 55, -10)), function(x) {
+    lapply(c("fullsnip_df_list", "colony_ewens_df_list", "colony_df_list"), function(y){
+      final_bugle_plot(D[[y]][[x]], lscale = .04, 
+                       XLAB = "",
+                       YLAB = "")
+    })
   })
-})
-
+}
 
 
 
@@ -57,6 +58,18 @@ df$Status <- ifelse(df$Correct, "Correctly-inferred sibling group",
 df$Status <- factor(df$Status, levels = c("Correctly-inferred sibling group", "Incomplete sibling group", "Grouping of non-siblings"))
 
 
+#### Here we make a data frame that will serve as the values for the "legend" for sibship size ####
+sibsize_key <- function(lscale, vals = seq(12, 1, by = -1), start.pos = 50, stop.pos = 350, height = 0.3,
+                        NumSNPs = 95, Program = "colony with sib-prior") {
+  data.frame(xpos = seq(start.pos, stop.pos, length.out = length(vals)),
+             ylo = height - vals * lscale,
+             yhi = height + vals * lscale,
+             sibsize = as.character(vals),
+             NumSNPs = NumSNPs,
+             Program = Program,
+             centre = height
+             )
+}
 
 #### Design a ggplot theme for these figures ####
 bugle_theme <- function (base_size = 12, base_family = "") 
@@ -82,10 +95,13 @@ bugle_theme <- function (base_size = 12, base_family = "")
 
 #### Here is a function of ggplot stuff to use ####
 lscale = 0.02  # this is hacky...
+
 ggbugle <- function(df, lscale = .02) {
+  df$ylo = df$Posterior - lscale * df$NumSibs
+  df$yhi = df$Posterior + lscale * df$NumSibs
   ggplot(df, aes(x = Index, y = Posterior)) + 
-    geom_linerange(aes(ymin = Posterior - lscale * NumSibs,
-                       ymax = Posterior + lscale * NumSibs,
+    geom_linerange(aes(ymin = ylo,
+                       ymax = yhi,
                        colour = Status),
                    size = 0.1) +
     geom_line(size = 0.15) +
@@ -94,17 +110,34 @@ ggbugle <- function(df, lscale = .02) {
 }
 
 #### Do the first figure  ####
+sibkey <- sibsize_key(lscale)
 df1 <- df[df$NumSNPs ==  95, ]
+
 ggbugle(df1) +
-  facet_wrap(~ Program, ncol = 3)
+  facet_wrap(~ Program, ncol = 3) +
+  geom_text(aes(xpos, yhi, label = sibsize), data = sibkey, size = 2.0, vjust = -1) +
+  geom_linerange(aes(x = xpos, ymin = ylo, ymax = yhi, y = NULL), data = sibkey, color = "black", size = 0.1) + # this adds the sibsize "key" in the appropiate panel
+  geom_line(aes(x = xpos, y = centre), data = sibkey, size = 0.15)
+  
 
 ggsave(file = "final_figures/bugle_trio.pdf", width = 8.5, height = 3.3)
 
 #### Now do the 7 x 3 grid  ####
 df2 <- df[df$NumSNPs <=  85, ]
 df2$NumSNPs <- factor(df2$NumSNPs, levels = seq(85, 25, -10))  # to order them top to bottom
+sibkey2 <- sibsize_key(lscale, 
+                       NumSNPs = 85,
+                       vals = seq(max(df$NumSibs), min(df$NumSibs), by = -1),
+                       start.pos = 50,
+                       stop.pos = 350,
+                       height = 0.2)
+sibkey2$NumSNPs <- factor(sibkey2$NumSNPs, levels = seq(85, 25, -10))
+
 ggbugle(df2) + 
-  facet_grid(NumSNPs ~ Program, scales = "free_x")
+  facet_grid(NumSNPs ~ Program, scales = "free_x") +
+  geom_text(aes(xpos, yhi, label = sibsize), data = sibkey2, size = 2.0, vjust = -1) +
+  geom_linerange(aes(x = xpos, ymin = ylo, ymax = yhi, y = NULL), data = sibkey2, color = "black", size = 0.1) + # this adds the sibsize "key" in the appropiate panel
+  geom_line(aes(x = xpos, y = centre), data = sibkey2, size = 0.15)
 
 ggsave(file = "final_figures/bugle_matrix.pdf", width = 8.5, height = 10)
 
